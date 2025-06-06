@@ -2,29 +2,30 @@
 import streamlit as st
 import requests
 
-# URL de tu backend FastAPI en Render
-URL_DE_FONDO = "https://lexmaticpro.onrender.com"
+# URL de tu backend FastAPI
+URL_BACKEND = "https://lexmaticpro.onrender.com"
 
-st.set_page_config(page_title="LexMatic Pro IA", page_icon="⚖️", layout="wide")
+st.set_page_config(page_title="LexMatic Pro IA", page_icon="⚖️")
 
 st.title("LexMatic Pro IA")
 st.subheader("Abogado Virtual - Buscador de Modelos Jurídicos")
 
-# Menú de categorías
 categorias = ["Salud", "Familia", "Laboral", "Discapacidad", "Civil"]
 categoria_seleccionada = st.selectbox("Seleccione la categoría jurídica:", categorias)
 
 if st.button("Buscar modelos"):
     try:
-        respuesta = requests.get(f"{URL_DE_FONDO}/buscar?categoria={categoria_seleccionada.lower()}")
+        respuesta = requests.get(f"{URL_BACKEND}/buscar", params={"categoria": categoria_seleccionada})
         if respuesta.status_code == 200:
-            resultados = respuesta.json()
-            for resultado in resultados["resultados"]:
-                st.markdown(f"### {resultado['titulo']}")
-                st.write(f"**Fundamento:** {resultado['fundamento']}")
-                st.write(resultado['contenido'])
-                st.markdown("---")
+            modelos = respuesta.json().get("resultados", [])
+            if modelos:
+                for modelo in modelos:
+                    with st.expander(modelo['titulo']):
+                        st.write(f"**Fundamento:** {modelo['fundamento']}")
+                        st.write(modelo['contenido'])
+            else:
+                st.warning("No se encontraron modelos para esta categoría.")
         else:
-            st.error("No se encontraron resultados.")
+            st.error("Error en la respuesta del servidor.")
     except Exception as e:
         st.error(f"Error al conectar con el servidor: {e}")
