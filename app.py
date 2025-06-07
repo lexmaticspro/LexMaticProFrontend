@@ -3,7 +3,7 @@ import streamlit as st
 import requests
 
 # URL de tu backend FastAPI
-URL_BACKEND = "https://lexmaticpro.onrender.com"
+URL_BACKEND = https://lexmaticprofrontend.onrender.com
 
 st.set_page_config(page_title="LexMatic Pro IA", page_icon="⚖️")
 
