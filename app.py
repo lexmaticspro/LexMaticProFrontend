@@ -1,7 +1,7 @@
 
 import streamlit as st
 import requests
-URL_BACKEND = "https://tudirecciondelbackend.onrender.com"
+URL_BACKEND = "https://lexmaticpro.onrender.com"
 
 URL_DE_FONDO = "https://lexmaticpro.onrender.com"
 
