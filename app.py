@@ -2,30 +2,33 @@
 import streamlit as st
 import requests
 
-# URL de tu backend FastAPI desplegado en Render
+# URL de tu backend FastAPI en Render
 URL_BACKEND = "https://lexmaticpro.onrender.com"
 
-# Configuración de la página
-st.set_page_config(page_title="LexMatic Pro IA", page_icon="⚖️", layout="centered")
+st.set_page_config(page_title="LexMatic Pro IA", layout="centered")
 
 st.title("LexMatic Pro IA")
 st.subheader("Abogado Virtual - Buscador de Modelos Jurídicos")
 
 # Menú de categorías
-categorias = ["Salud", "Familia", "Laboral", "Discapacidad", "Civil"]
+categorias = ["Salud", "Familia"]
 categoria_seleccionada = st.selectbox("Seleccione la categoría jurídica:", categorias)
 
-# Botón para buscar modelos
 if st.button("Buscar modelos"):
     try:
-        response = requests.get(f"{URL_BACKEND}/buscar", params={"categoria": categoria_seleccionada})
-        response.raise_for_status()
-        modelos = response.json()
-        
-        for modelo in modelos:
-            st.markdown(f"### {modelo['titulo']}")
-            st.markdown(f"**Fundamento:** {modelo['fundamento']}")
-            st.markdown(f"{modelo['descripcion']}\n")
-            st.markdown("---")
+        respuesta = requests.get(f"{URL_BACKEND}/buscar?categoria={categoria_seleccionada}")
+        if respuesta.status_code == 200:
+            datos = respuesta.json()
+            modelos = datos["modelos"]
+            if modelos:
+                for modelo in modelos:
+                    st.write(f"**{modelo['titulo']}**")
+                    st.write(f"*Fundamento:* {modelo['fundamento']}")
+                    st.write(f"{modelo['descripcion']}")
+                    st.markdown("---")
+            else:
+                st.warning("No se encontraron modelos para la categoría seleccionada.")
+        else:
+            st.error("Error al obtener los modelos desde el servidor.")
     except Exception as e:
-        st.error(f"Error al conectar con el servidor: {e}")
+        st.error(f"Error al conectar con el servidor: {str(e)}")
