@@ -1,8 +1,8 @@
 
 import streamlit as st
 import requests
+URL_BACKEND = "https://tudirecciondelbackend.onrender.com"
 
-# URL de tu backend FastAPI
 URL_DE_FONDO = "https://lexmaticpro.onrender.com"
 
 
